@@ -19,13 +19,13 @@ import java.util.List;
 public class WorkRecordManager {
 
     /**
-     * 新建学习任务待办
+     * 新建任务待办
      *
      * @param request
      * @return
      * @throws ApiException
      */
-    public OapiWorkrecordAddResponse newLearnToDo(OapiWorkrecordAddRequest request, String title, String content) throws ApiException {
+    public OapiWorkrecordAddResponse newWork(OapiWorkrecordAddRequest request, String title, String content) throws ApiException {
         if (request == null) {
             return null;
         }
@@ -44,10 +44,19 @@ public class WorkRecordManager {
         String bizId = RandomUtil.getRandomString(10);
         request.setBizId(bizId);
         request.setUrl(request.getUrl() + "?bizId=" + bizId);
-        return client.execute(request, accessToken);
+        OapiWorkrecordAddResponse oapiWorkrecordAddResponse = client.execute(request, accessToken);
+        return oapiWorkrecordAddResponse;
     }
 
-    public OapiWorkrecordUpdateResponse updateLearnToDo(String userId, String bizId) throws ApiException {
+    /**
+     * 更新任务
+     *
+     * @param userId
+     * @param bizId
+     * @return
+     * @throws ApiException
+     */
+    public OapiWorkrecordUpdateResponse updateWork(String userId, String bizId) throws ApiException {
         // 获取access_token
         String accessToken = AccessTokenUtil.getAccessToken();
 

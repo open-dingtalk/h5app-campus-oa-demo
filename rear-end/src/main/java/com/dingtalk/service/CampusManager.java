@@ -17,7 +17,7 @@ import java.util.List;
  * 家校管理
  */
 @Service
-public class HomeschoolManager {
+public class CampusManager {
 
     /**
      * 初始化家校结构
@@ -171,4 +171,6 @@ public class HomeschoolManager {
         System.out.println(rsp.getBody());
         return rsp;
     }
+
+
 }
