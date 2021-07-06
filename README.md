@@ -81,7 +81,7 @@ npm run build
 
 **进入首页自动登陆**
 
-![image-20210706174029703](https://img.alicdn.com/imgextra/i1/O1CN0140LPNG1atkYxEKbpf_!!6000000003388-2-tps-328-429.png)
+![image-20210706174029703](https://img.alicdn.com/imgextra/i3/O1CN01sQ4hTv1p7rNrR1TDC_!!6000000005314-2-tps-331-519.png)
 
 
 
@@ -125,7 +125,7 @@ npm run build
 
 
 
-![image-20210706175435321](https://img.alicdn.com/imgextra/i2/O1CN01JYxg6N1jWhAMmG7Ja_!!6000000004556-2-tps-333-495.png)
+![image-20210706175435321](https://img.alicdn.com/imgextra/i1/O1CN01mfh2gA1lTbj7Ixxzl_!!6000000004820-2-tps-330-562.png)
 
 <center>发起待办</center>
 
