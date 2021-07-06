@@ -103,7 +103,7 @@ public class CampusController {
         String content = "#### " + myCourse.getTeacherName() + "老师申请换课：\n" +
                 "##### 申请调换课程：" + myCourse.getTeacherName() + myCourse.getStartTime() + "~" + myCourse.getEndTime() + "的" + myCourse.getName() + "课\n" +
                 "##### 被申请调换课程：" + otherCourse.getTeacherName() + otherCourse.getStartTime() + "~" + otherCourse.getEndTime() + "的" + otherCourse.getName() + "课\n" +
-                "##### 随机串：" + RandomUtil.getRandomString(5);
+                "##### 消息编号：" + RandomUtil.getRandomString(5);
         campusManager.sendNotification(otherCourse.getTeacherUserid(), "调课申请", content, btnJsonListList);
         return RpcServiceResult.getSuccessResult(courses);
     }
