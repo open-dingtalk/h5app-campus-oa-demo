@@ -8,15 +8,15 @@ public class AppConstant {
     /**
      * 开发者后台->应用开发-企业内部应用->选择您的小程序->凭证与基础信息->AppKey
      */
-    public static final String APP_KEY = "***";
+    public static final String APP_KEY = "dingf1zqy4mmcvra9ryl";
     /**
      * AgentId
      */
-    public static final Long AGENT_ID = 0L;
+    public static final Long AGENT_ID = 1230569252L;
     /**
      * 开发者后台->应用开发-企业内部应用->选择您的小程序->凭证与基础信息->AppSecret
      */
-    public static final String APP_SECRET="***";
+    public static final String APP_SECRET="WKjWXfLhsgHxSK8AaOut0qIPNBhp7ifCBoZoKXPnwHPQ9ocphpj3mhx68NgUXTuX";
     /**
      * 开发者后台->开放能力->场景群->机器人->ID
      */

@@ -3,6 +3,7 @@ import axios from 'axios';
 import React from 'react';
 import './App.css';
 import { withRouter } from 'react-router-dom';
+import {findAllByDisplayValue} from "@testing-library/react";
 
 function Work(props) {
     let usernamelist = [];
@@ -99,6 +100,43 @@ function Classes (props) {
         return <div></div>
     }
 }
+function Courses(props){
+  return(
+      <div>
+          <div>
+                <p><b>我的课程</b></p>
+                  <div>
+                      {
+                          props.myCourses.map((e,i) =>
+                              <div key={"my" + i}>
+                                  <span>课程名称：{e.name}</span><br/>
+                                  <span>上课时间：{e.startTime + "~" + e.endTime}</span><br/>
+                                  <span>任课老师：{e.teacherName}</span><br/>
+                                  <span><input type="radio" name="myCourse" value={e.courseCode} onChange={props.chooseMy}/></span>
+                              </div>
+                          )
+                      }
+                  </div>
+          </div>
+          <div>
+                <p><b>其他老师课程</b></p>
+                  <div>
+                      {
+                          props.otherCourses.map((e,i) =>
+                              <div key={"other" + i}>
+                                  <span>课程名称：{e.name}</span><br/>
+                                  <span>上课时间：{e.startTime + "~" + e.endTime}</span><br/>
+                                  <span>任课老师：{e.teacherName}</span><br/>
+                                  <span><input type="radio" name="otherCourse" value={e.courseCode} onChange={props.chooseOther}/></span>
+                              </div>
+                          )
+                      }
+                  </div>
+          </div>
+          <p><button type="button" onClick={props.onClick}>申请换课</button></p>
+      </div>
+  )
+}
 
 
 class App extends React.Component{
@@ -116,6 +154,12 @@ class App extends React.Component{
             deptList:[],
             deptId: 0,
             teachers: [],
+            myCourses: [],
+            otherCourses: [],
+            adjustCourse:{
+              myCourseCode:"",
+              otherCourseCode:"",
+            },
             showType:0,
             className: '',
             classId: '',
@@ -134,6 +178,7 @@ class App extends React.Component{
                 formTitle:"标题",
                 formContent:"内容"
             },
+            displayType:0,
         }
     }
     showWork(e){
@@ -235,46 +280,116 @@ class App extends React.Component{
                 </div>
             );
         }else{
-            let deptOptions;
-            if(this.state.showType === 0){
-                deptOptions =
-                    <div>
-                        <h3>选择部门：</h3>
-                        {
-                            this.state.deptList.map((item, i) =>
-                                <div key={i}>
-                                    <p><u><span onClick={(e) => this.chooseDept(e, item.deptId, item.deptType, item.name)}>{item.name}</span></u></p>
-                                </div>
-                            )
-                        }
-                    </div>
-            }else{
-                deptOptions = <div></div>
-            }
-            return(
+            let body;
+            if(this.state.displayType === 0){
+                body =
                 <div>
-                    {deptOptions}
-                    <Classes
-                        showType={this.state.showType}
-                        teachers={this.state.teachers}
-                        className={this.state.className}
-                        addUser={(e) => this.addUser(e)}
-                        onChange={(e) => this.setText(e)}
-                        text={this.state.sendMessage.text}
-                        onClick={(e) => this.sendMsg(e)}
-                        showWork={(e) => this.showWork(e)}
-                    />
-                    <Work
-                        showType={this.state.showType}
-                        users={this.state.sendMessage.teacherList}
-                        form={this.state.form}
-                        onChange={(e) => this.updateFormData(e)}
-                        onClick={(e) => this.newWorkRecord(e)}
-                    />
+                    <p>  <u onClick={(e) => this.displayType(e,1)}>发送通知/待办</u></p>
+                    <p>  <u onClick={(e) => this.displayType(e,2)}>调换课</u></p>
                 </div>
-            )
+            }else if(this.state.displayType === 1){
+                let deptOptions;
+                if(this.state.showType === 0){
+                    deptOptions =
+                        <div>
+                            <h3>选择部门：</h3>
+                            {
+                                this.state.deptList.map((item, i) =>
+                                    <div key={i}>
+                                        <p><u><span onClick={(e) => this.chooseDept(e, item.deptId, item.deptType, item.name)}>{item.name}</span></u></p>
+                                    </div>
+                                )
+                            }
+                        </div>
+                }else{
+                    deptOptions = <div></div>
+                }
+                body =
+                    <div>
+                        {deptOptions}
+                        <Classes
+                            showType={this.state.showType}
+                            teachers={this.state.teachers}
+                            className={this.state.className}
+                            addUser={(e) => this.addUser(e)}
+                            onChange={(e) => this.setText(e)}
+                            text={this.state.sendMessage.text}
+                            onClick={(e) => this.sendMsg(e)}
+                            showWork={(e) => this.showWork(e)}
+                        />
+                        <Work
+                            showType={this.state.showType}
+                            users={this.state.sendMessage.teacherList}
+                            form={this.state.form}
+                            onChange={(e) => this.updateFormData(e)}
+                            onClick={(e) => this.newWorkRecord(e)}
+                        />
+                    </div>
+            }else if(this.state.displayType === 2){
+                body =
+                    <div>
+                        <Courses
+                            myCourses={this.state.myCourses}
+                            otherCourses={this.state.otherCourses}
+                            chooseMy={(e) => this.chooseMy(e)}
+                            chooseOther={(e) => this.chooseOther(e)}
+                            onClick={() => this.adjust()}
+                        />
+                    </div>
+            }
+            // alert("displayType: " + this.state.displayType);
+            return(<div>{body}</div>)
         }
-
+    }
+    adjust(){
+        axios.post(this.state.domain + "/campus/adjust",
+            JSON.stringify(this.state.adjustCourse),{headers:{"Content-Type":"application/json"}}
+            ).then(res => {
+                alert("调课申请已发出，请留意通知消息!")
+                // alert("classUserList --- " + JSON.stringify(this.state.students))
+            }).catch(error => {
+            alert("adjust err " + JSON.stringify(error))
+        })
+    }
+    chooseOther(e){
+        let value = e.target.value;
+        let adjustCourse = this.state.adjustCourse;
+        adjustCourse.otherCourseCode = value;
+        this.setState({
+            adjustCourse: adjustCourse
+        })
+    }
+    chooseMy(e){
+        let value = e.target.value;
+        let adjustCourse = this.state.adjustCourse;
+        adjustCourse.myCourseCode = value;
+        this.setState({
+            adjustCourse: adjustCourse
+        })
+    }
+    courseList(){
+        axios.get(this.state.domain + "/campus/courseList?userid=" + this.state.userId)
+            .then(res => {
+                alert("courseList --- ")
+                this.setState({
+                    myCourses: res.data.data.myCourses,
+                    otherCourses: res.data.data.otherCourses,
+                    displayType: 2
+                })
+                // alert("myCourses --- " + JSON.stringify(this.state.myCourses))
+                // alert("otherCourses --- " + JSON.stringify(this.state.otherCourses))
+            }).catch(error => {
+            alert("courseList err " + JSON.stringify(error))
+        })
+    }
+    displayType(e, type){
+        if(type === 2){
+            this.courseList();
+        } else{
+            this.setState({
+                displayType: type,
+            })
+        }
     }
     newWorkRecord(e){
         let data = this.state.form;

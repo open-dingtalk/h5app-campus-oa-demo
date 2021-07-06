@@ -103,7 +103,7 @@ public class CampusManager {
      *
      * @throws ApiException
      */
-    public OapiMessageCorpconversationAsyncsendV2Response sendNotification(String userIdList,String title, String content) throws ApiException {
+    public OapiMessageCorpconversationAsyncsendV2Response sendNotification(String userIdList,String title, String content, List<OapiMessageCorpconversationAsyncsendV2Request.BtnJsonList> btnJsonListList) throws ApiException {
         String accessToken = AccessTokenUtil.getAccessToken();
 
         DingTalkClient client = new DefaultDingTalkClient(UrlConstant.SEND_NOTI_URL);
@@ -117,12 +117,6 @@ public class CampusManager {
         actionCard.setTitle(title);
         actionCard.setMarkdown(content);
         actionCard.setBtnOrientation("1");
-
-        List<OapiMessageCorpconversationAsyncsendV2Request.BtnJsonList> btnJsonListList = new ArrayList<>();
-        OapiMessageCorpconversationAsyncsendV2Request.BtnJsonList btnJsonList = new OapiMessageCorpconversationAsyncsendV2Request.BtnJsonList();
-        btnJsonList.setTitle("收到");
-        btnJsonList.setActionUrl("http://abcdefg.vaiwan.com/confirm");//此处可替换成服务相关链接
-        btnJsonListList.add(btnJsonList);
         actionCard.setBtnJsonList(btnJsonListList);
 
         msg.setMsgtype("action_card");
