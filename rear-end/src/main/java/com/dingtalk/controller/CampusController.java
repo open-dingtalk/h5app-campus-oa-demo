@@ -2,7 +2,6 @@ package com.dingtalk.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
 import com.dingtalk.api.request.OapiMessageCorpconversationAsyncsendV2Request;
 import com.dingtalk.api.request.OapiWorkrecordAddRequest;
 import com.dingtalk.api.response.*;
@@ -11,13 +10,17 @@ import com.dingtalk.model.RpcServiceResult;
 import com.dingtalk.service.CampusManager;
 import com.dingtalk.service.WorkRecordManager;
 import com.dingtalk.util.CourseUtil;
+import com.dingtalk.util.HostUtil;
 import com.dingtalk.util.RandomUtil;
 import com.dingtalk.util.TimeUtil;
 import com.taobao.api.ApiException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @RequestMapping("/campus")
@@ -52,7 +55,7 @@ public class CampusController {
      * @return
      */
     @GetMapping("/agree")
-    public String agree(@RequestParam Integer type,@RequestParam String myCourseCode, @RequestParam String otherCourseCode) throws ApiException {
+    public String agree(@RequestParam Integer type,@RequestParam String myCourseCode, @RequestParam String otherCourseCode, @RequestParam("origin") String origin) throws ApiException {
         List<Course> courses = CourseUtil.list();
         Course myCourse = courses.stream().filter(course -> course.getCourseCode().equals(myCourseCode)).findFirst().get();
         Course otherCourse = courses.stream().filter(course -> course.getCourseCode().equals(otherCourseCode)).findFirst().get();
@@ -72,7 +75,7 @@ public class CampusController {
         List<OapiMessageCorpconversationAsyncsendV2Request.BtnJsonList> btnJsonListList = new ArrayList<>();
         OapiMessageCorpconversationAsyncsendV2Request.BtnJsonList btnJsonList = new OapiMessageCorpconversationAsyncsendV2Request.BtnJsonList();
         btnJsonList.setTitle("收到");
-        btnJsonList.setActionUrl("http://abcdefg.vaiwan.com/confirm");//此处可替换成服务相关链接
+        btnJsonList.setActionUrl(origin + "/confirm");//此处可替换成服务相关链接
         btnJsonListList.add(btnJsonList);
         OapiMessageCorpconversationAsyncsendV2Response rsp = campusManager.sendNotification(userid, "调课申请结果", content, btnJsonListList);
         return result;
@@ -85,6 +88,7 @@ public class CampusController {
      */
     @PostMapping("/adjust")
     public RpcServiceResult courseList(@RequestBody Map paramMap) throws ApiException {
+        String origin = paramMap.get("origin").toString();
         String myCourseCode = paramMap.get("myCourseCode").toString();
         String otherCourseCode = paramMap.get("otherCourseCode").toString();
         List<Course> courses = CourseUtil.list();
@@ -94,10 +98,10 @@ public class CampusController {
         List<OapiMessageCorpconversationAsyncsendV2Request.BtnJsonList> btnJsonListList = new ArrayList<>();
         OapiMessageCorpconversationAsyncsendV2Request.BtnJsonList btnJsonList0 = new OapiMessageCorpconversationAsyncsendV2Request.BtnJsonList();
         btnJsonList0.setTitle("同意");
-        btnJsonList0.setActionUrl("http://abcdefg.vaiwan.com/campus/agree?type=0&myCourseCode=" + myCourseCode + "&otherCourseCode=" + otherCourseCode);
+        btnJsonList0.setActionUrl(origin + "/campus/agree?type=0&myCourseCode=" + myCourseCode + "&otherCourseCode=" + otherCourseCode + "&" + HostUtil.getOriginUrlParam(origin));
         OapiMessageCorpconversationAsyncsendV2Request.BtnJsonList btnJsonList1 = new OapiMessageCorpconversationAsyncsendV2Request.BtnJsonList();
         btnJsonList1.setTitle("拒绝");
-        btnJsonList1.setActionUrl("http://abcdefg.vaiwan.com/campus/agree?type=1&myCourseCode=" + myCourseCode + "&otherCourseCode=" + otherCourseCode);
+        btnJsonList1.setActionUrl(origin + "/campus/agree?type=1&myCourseCode=" + myCourseCode + "&otherCourseCode=" + otherCourseCode + "&" + HostUtil.getOriginUrlParam(origin));
         btnJsonListList.add(btnJsonList0);
         btnJsonListList.add(btnJsonList1);
         String content = "#### " + myCourse.getTeacherName() + "老师申请换课：\n" +
@@ -149,6 +153,7 @@ public class CampusController {
     @PostMapping("/sendMsg")
     public RpcServiceResult sendMsg(@RequestBody Map paramMap) throws ApiException {
         System.out.println(paramMap);
+        String origin = paramMap.get("origin").toString();
         String content = paramMap.get("text").toString();
         String title = paramMap.get("title").toString();
         Long classId = Long.parseLong(paramMap.get("classId").toString());
@@ -158,7 +163,7 @@ public class CampusController {
         List<OapiMessageCorpconversationAsyncsendV2Request.BtnJsonList> btnJsonListList = new ArrayList<>();
         OapiMessageCorpconversationAsyncsendV2Request.BtnJsonList btnJsonList = new OapiMessageCorpconversationAsyncsendV2Request.BtnJsonList();
         btnJsonList.setTitle("收到");
-        btnJsonList.setActionUrl("http://abcdefg.vaiwan.com/confirm");//此处可替换成服务相关链接
+        btnJsonList.setActionUrl(origin + "/confirm");//此处可替换成服务相关链接
         btnJsonListList.add(btnJsonList);
         list.forEach(e -> {
             String id = e.get("id").toString();
@@ -179,12 +184,14 @@ public class CampusController {
     @PostMapping("/newWork")
     public RpcServiceResult newWork(@RequestBody Map paramMap) {
         try {
+            String origin = paramMap.get("origin").toString();
             // 待办时间
             Long createTime = TimeUtil.stringDateToTimestamp(paramMap.get("createTime").toString());
             // 待办标题
             String title = paramMap.get("title").toString();
             // 任务链接
             String url = paramMap.get("url").toString();
+            url = url + HostUtil.getUrlSymbol(url) + HostUtil.getOriginUrlParam(origin);
             // 表单标题
             String formTitle = paramMap.get("formTitle").toString();
             // 表单内容

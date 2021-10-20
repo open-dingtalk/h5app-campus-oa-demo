@@ -8,6 +8,7 @@ import com.dingtalk.api.response.OapiWorkrecordAddResponse;
 import com.dingtalk.api.response.OapiWorkrecordUpdateResponse;
 import com.dingtalk.constant.UrlConstant;
 import com.dingtalk.util.AccessTokenUtil;
+import com.dingtalk.util.HostUtil;
 import com.dingtalk.util.RandomUtil;
 import com.taobao.api.ApiException;
 import org.springframework.stereotype.Service;
@@ -43,7 +44,7 @@ public class WorkRecordManager {
         request.setPcOpenType(4L);
         String bizId = RandomUtil.getRandomString(10);
         request.setBizId(bizId);
-        request.setUrl(request.getUrl() + "?bizId=" + bizId);
+        request.setUrl(request.getUrl() + HostUtil.getUrlSymbol(request.getUrl()) + "bizId=" + bizId);
         OapiWorkrecordAddResponse oapiWorkrecordAddResponse = client.execute(request, accessToken);
         return oapiWorkrecordAddResponse;
     }

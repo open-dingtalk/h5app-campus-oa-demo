@@ -30,7 +30,7 @@ function Work(props) {
                         <div className="form-row-label">任务链接</div>
                         <div className="form-row-content">
                             <input name="url" className="input" placeholder="输入任务链接"
-                                   value={props.form.url}
+                                   value={props.toWorkUrl}
                                    onChange={props.onChange}
                             />
                         </div>
@@ -101,41 +101,41 @@ function Classes (props) {
     }
 }
 function Courses(props){
-  return(
-      <div>
-          <div>
+    return(
+        <div>
+            <div>
                 <p><b>我的课程</b></p>
-                  <div>
-                      {
-                          props.myCourses.map((e,i) =>
-                              <div key={"my" + i}>
-                                  <span>课程名称：{e.name}</span><br/>
-                                  <span>上课时间：{e.startTime + "~" + e.endTime}</span><br/>
-                                  <span>任课老师：{e.teacherName}</span><br/>
-                                  <span><input type="radio" name="myCourse" value={e.courseCode} onChange={props.chooseMy}/></span>
-                              </div>
-                          )
-                      }
-                  </div>
-          </div>
-          <div>
+                <div>
+                    {
+                        props.myCourses.map((e,i) =>
+                            <div key={"my" + i}>
+                                <span>课程名称：{e.name}</span><br/>
+                                <span>上课时间：{e.startTime + "~" + e.endTime}</span><br/>
+                                <span>任课老师：{e.teacherName}</span><br/>
+                                <span><input type="radio" name="myCourse" value={e.courseCode} onChange={props.chooseMy}/></span>
+                            </div>
+                        )
+                    }
+                </div>
+            </div>
+            <div>
                 <p><b>其他老师课程</b></p>
-                  <div>
-                      {
-                          props.otherCourses.map((e,i) =>
-                              <div key={"other" + i}>
-                                  <span>课程名称：{e.name}</span><br/>
-                                  <span>上课时间：{e.startTime + "~" + e.endTime}</span><br/>
-                                  <span>任课老师：{e.teacherName}</span><br/>
-                                  <span><input type="radio" name="otherCourse" value={e.courseCode} onChange={props.chooseOther}/></span>
-                              </div>
-                          )
-                      }
-                  </div>
-          </div>
-          <p><button type="button" onClick={props.onClick}>申请换课</button></p>
-      </div>
-  )
+                <div>
+                    {
+                        props.otherCourses.map((e,i) =>
+                            <div key={"other" + i}>
+                                <span>课程名称：{e.name}</span><br/>
+                                <span>上课时间：{e.startTime + "~" + e.endTime}</span><br/>
+                                <span>任课老师：{e.teacherName}</span><br/>
+                                <span><input type="radio" name="otherCourse" value={e.courseCode} onChange={props.chooseOther}/></span>
+                            </div>
+                        )
+                    }
+                </div>
+            </div>
+            <p><button type="button" onClick={props.onClick}>申请换课</button></p>
+        </div>
+    )
 }
 
 
@@ -146,7 +146,7 @@ class App extends React.Component{
             //内网穿透工具介绍:
             // https://developers.dingtalk.com/document/resourcedownload/http-intranet-penetration?pnamespace=app
             // 替换成后端服务域名
-            domain: "http://abcdefg.vaiwan.com",
+            domain: "",
             corpId: '',
             authCode: '',
             userId: '',
@@ -157,8 +157,8 @@ class App extends React.Component{
             myCourses: [],
             otherCourses: [],
             adjustCourse:{
-              myCourseCode:"",
-              otherCourseCode:"",
+                myCourseCode:"",
+                otherCourseCode:"",
             },
             showType:0,
             className: '',
@@ -173,11 +173,13 @@ class App extends React.Component{
             },
             form:{
                 title:"任务待办",
-                url:"http://abcdefg.vaiwan.com/toWork",
+                url:"/toWork",
                 createTime:"2021-07-05 16:00:00",
                 formTitle:"标题",
                 formContent:"内容"
             },
+            toWorkUrl:'',
+            origin:'',
             displayType:0,
         }
     }
@@ -214,7 +216,9 @@ class App extends React.Component{
         this.setState({
             sendMessage: msg
         })
-        axios.post(this.state.domain + "/campus/sendMsg", JSON.stringify(this.state.sendMessage),
+        let data = this.state.sendMessage;
+        data.origin = window.location.origin;
+        axios.post(this.state.domain + "/campus/sendMsg", JSON.stringify(data),
             {headers:{"Content-Type":"application/json"}}
         ).then(res => {
             alert("通知已发出！");
@@ -257,6 +261,14 @@ class App extends React.Component{
     }
 
     render() {
+        if(this.state.toWorkUrl === ''){
+            let origin = window.location.origin;
+            let toWorkUrl = origin + this.state.form.url;
+            this.setState({
+                toWorkUrl: toWorkUrl
+            })
+            console.log("toWorkUrl" , toWorkUrl);
+        }
         if(this.state.userId === ''){
             this.login();
         }
@@ -266,7 +278,7 @@ class App extends React.Component{
                 this.getBizId(param);
             }
             let status = this.state.finish ? <div>已完成</div> : <div>
-                 任务页面。。。
+                任务页面。。。
                 <br/>
                 <br/>
                 <br/>
@@ -283,10 +295,10 @@ class App extends React.Component{
             let body;
             if(this.state.displayType === 0){
                 body =
-                <div>
-                    <p>  <u onClick={(e) => this.displayType(e,1)}>发送通知/待办</u></p>
-                    <p>  <u onClick={(e) => this.displayType(e,2)}>调换课</u></p>
-                </div>
+                    <div>
+                        <p>  <u onClick={(e) => this.displayType(e,1)}>发送通知/待办</u></p>
+                        <p>  <u onClick={(e) => this.displayType(e,2)}>调换课</u></p>
+                    </div>
             }else if(this.state.displayType === 1){
                 let deptOptions;
                 if(this.state.showType === 0){
@@ -323,6 +335,7 @@ class App extends React.Component{
                             form={this.state.form}
                             onChange={(e) => this.updateFormData(e)}
                             onClick={(e) => this.newWorkRecord(e)}
+                            toWorkUrl={this.state.toWorkUrl}
                         />
                     </div>
             }else if(this.state.displayType === 2){
@@ -337,17 +350,18 @@ class App extends React.Component{
                         />
                     </div>
             }
-            // alert("displayType: " + this.state.displayType);
             return(<div>{body}</div>)
         }
     }
     adjust(){
+        let data = this.state.adjustCourse;
+        data.origin = window.location.origin;
         axios.post(this.state.domain + "/campus/adjust",
-            JSON.stringify(this.state.adjustCourse),{headers:{"Content-Type":"application/json"}}
-            ).then(res => {
-                alert("调课申请已发出，请留意通知消息!")
-                // alert("classUserList --- " + JSON.stringify(this.state.students))
-            }).catch(error => {
+            JSON.stringify(data),{headers:{"Content-Type":"application/json"}}
+        ).then(res => {
+            alert("调课申请已发出，请留意通知消息!")
+            // alert("classUserList --- " + JSON.stringify(this.state.students))
+        }).catch(error => {
             alert("adjust err " + JSON.stringify(error))
         })
     }
@@ -398,6 +412,8 @@ class App extends React.Component{
             ids.push(this.state.sendMessage.teacherList[i].id);
         }
         data.ids = ids;
+        data.url = this.state.toWorkUrl;
+        data.origin = window.location.origin;
         // alert(JSON.stringify(data));
         axios.post(this.state.domain + "/campus/newWork",
             JSON.stringify(data),{headers:{"Content-Type":"application/json"}}
@@ -423,8 +439,8 @@ class App extends React.Component{
                 this.setState({form: form});
                 break;
             case "url":
-                form.url = e.target.value;
-                this.setState({form: form});
+                let toWorkUrl = e.target.value;
+                this.setState({toWorkUrl: toWorkUrl});
                 break;
             case "createTime":
                 form.createTime = e.target.value;
@@ -482,10 +498,21 @@ class App extends React.Component{
         })
     }
 
-    login() {
+    login(){
+        axios.get(this.state.domain + "/getCorpId")
+            .then(res => {
+                if(res.data) {
+                    this.loginAction(res.data);
+                }
+            }).catch(error => {
+            alert("corpId err, " + JSON.stringify(error))
+        })
+    }
+    loginAction(corpId) {
+        // alert("corpId: " +  corpId);
         let _this = this;
         dd.runtime.permission.requestAuthCode({
-            corpId: "ding9f50b15bccd16741",//企业 corpId
+            corpId: corpId,//企业 corpId
             onSuccess : function(res) {
                 // 调用成功时回调
                 _this.state.authCode = res.code
@@ -494,23 +521,24 @@ class App extends React.Component{
                     if (res && res.data.success) {
                         let userId = res.data.data.userId;
                         let userName = res.data.data.userName;
-                        alert('登陆成功，你好，' + userName);
-                        _this.setState({
-                            userId:userId,
-                            userName:userName
-                        })
+                        alert('登录成功，你好' + userName);
+                        setTimeout(function () {
+                            _this.setState({
+                                userId:userId,
+                                userName:userName
+                            })
+                        }, 0)
                         _this.getDeptList(0);
                     } else {
-                        alert("login failed --->", res);
+                        alert("login failed --->" + JSON.stringify(res));
                     }
                 }).catch(error => {
-                    alert("httpRequest failed --->",JSON.stringify(error))
+                    alert("httpRequest failed --->" + JSON.stringify(error))
                 })
             },
             onFail : function(err) {
                 // 调用失败时回调
-                alert("requestAuthCode failed --->",JSON.stringify(err))
-
+                alert("requestAuthCode failed --->" + JSON.stringify(err))
             }
         });
     }

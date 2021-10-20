@@ -4,13 +4,12 @@ import com.dingtalk.api.DefaultDingTalkClient;
 import com.dingtalk.api.DingTalkClient;
 import com.dingtalk.api.request.*;
 import com.dingtalk.api.response.*;
-import com.dingtalk.constant.AppConstant;
+import com.dingtalk.config.AppConfig;
 import com.dingtalk.constant.UrlConstant;
 import com.dingtalk.util.AccessTokenUtil;
 import com.taobao.api.ApiException;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -108,7 +107,7 @@ public class CampusManager {
 
         DingTalkClient client = new DefaultDingTalkClient(UrlConstant.SEND_NOTI_URL);
         OapiMessageCorpconversationAsyncsendV2Request request = new OapiMessageCorpconversationAsyncsendV2Request();
-        request.setAgentId(AppConstant.AGENT_ID);
+        request.setAgentId(AppConfig.getAgentId());
         request.setUseridList(userIdList);
         request.setToAllUser(false);
 
@@ -158,7 +157,7 @@ public class CampusManager {
 
         DingTalkClient client = new DefaultDingTalkClient(UrlConstant.STUDENTINFO_GET);
         OapiEduClassStudentinfoGetRequest req = new OapiEduClassStudentinfoGetRequest();
-        req.setAppId(AppConstant.AGENT_ID);
+        req.setAppId(AppConfig.getAgentId());
         req.setClassId(classId);
         req.setUserid(userId);
         OapiEduClassStudentinfoGetResponse rsp = client.execute(req, accessToken);
