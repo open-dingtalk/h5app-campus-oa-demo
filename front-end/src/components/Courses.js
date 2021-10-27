@@ -21,12 +21,6 @@ const Courses = (props) => {
                   <br />
                   <span>任课老师：{e.teacherName}</span>
                   <br />
-                  {/* <input
-              type="radio"
-              name="myCourse"
-              value={e.courseCode}
-              onChange={props.chooseMy}
-            /> */}
                 </Radio>
               </div>
             ))}
@@ -50,12 +44,6 @@ const Courses = (props) => {
                   <br />
                   <span>任课老师：{e.teacherName}</span>
                   <br />
-                  {/* <Input
-                  type="radio"
-                  name="otherCourse"
-                  value={e.courseCode}
-                  onChange={props.chooseOther}
-                /> */}
                 </Radio>
               </div>
             ))}

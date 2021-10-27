@@ -17,7 +17,6 @@ const Classes = (props) => {
             >
               {item.name}
             </Checkbox>
-            {/* <span>{item.name}</span> */}
           </div>
         ))}
         <p>
