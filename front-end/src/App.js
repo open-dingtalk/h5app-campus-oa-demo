@@ -53,7 +53,7 @@ class App extends React.Component {
         myCourseCode: "",
         otherCourseCode: "",
       },
-      showType: 2,
+      showType: 0,
       className: "",
       classId: "",
       bizId: "",
@@ -269,19 +269,7 @@ class App extends React.Component {
           </div>
         )
       }
-      return (
-        <div className="App">
-          {body}
-          <Work
-            showType={this.state.showType}
-            users={this.state.sendMessage.teacherList}
-            // form={this.state.form}
-            // onChange={(e) => this.updateFormData(e)}
-            onClick={(e) => this.newWorkRecord(e)}
-            // toWorkUrl={this.state.toWorkUrl}
-          />
-        </div>
-      )
+      return <div className="App">{body}</div>
     }
   }
   adjust() {
