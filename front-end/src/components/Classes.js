@@ -1,5 +1,5 @@
 import react from "react"
-import { Input, Button } from "antd"
+import { Checkbox, Button } from "antd"
 
 const Classes = (props) => {
   const { TextArea } = Input
@@ -9,15 +9,16 @@ const Classes = (props) => {
         <h3 className="title">{props.className}</h3>
         <h4 className="littleTitle">老师列表</h4>
         {props.teachers.map((item, i) => (
-          <label key={"teacher" + i}>
-            <Input
-              type="checkbox"
+          <div key={"teacher" + i}>
+            <Checkbox
               value={item.userid}
               name={item.name}
               onChange={props.addUser}
-            />
-            <span>{item.name}</span>
-          </label>
+            >
+              {item.name}
+            </Checkbox>
+            {/* <span>{item.name}</span> */}
+          </div>
         ))}
         <p>
           输入通知内容：
