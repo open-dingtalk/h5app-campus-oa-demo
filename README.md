@@ -29,8 +29,6 @@
 
 ![image-20210706172027870](https://img.alicdn.com/imgextra/i3/O1CN016WCr6428wDdBhkWi6_!!6000000007996-2-tps-1358-571.png)
 
-
-
 **创建家校通讯录**
 
 钉钉oa家校通讯录：录入学区/学段/年级/班级、老师、学生、家长等信息（此处是展示家校相关接口，不需要可省略此步骤）
@@ -39,21 +37,34 @@
 
 
 
-### 运行
+### 运行前准备
 
-**下载项目**
+ 下载demo
 
 ```shell
-git clone https://github.com/open-dingtalk/h5app-campus-oa-demo.git
+git clone https://github.com/open-dingtalk/h5app-scene-group-demo.git
 ```
 
-**修改企业id**
+### 获取相应参数
 
-![image-20210706173519037](https://img.alicdn.com/imgextra/i3/O1CN01bia0MI1k3fgUVsxrr_!!6000000004628-2-tps-863-381.png)
+获取到以下参数，修改后端application.yaml
 
+```yaml
+app:
+  app_key: *****
+  app_secret: *****
+  agent_id: *****
+  corp_id: *****
+```
 
+参数获取方法：登录开发者后台
 
-**react编译打包**
+1. 获取corpId：https://open-dev.dingtalk.com/#/index
+2. 进入应用开发-企业内部开发-点击进入应用-基础信息-获取appKey、appSecret、agentId
+
+### 修改前端页面
+
+**打开项目，命令行中执行以下命令，编译打包生成build文件**
 
 ```shell
 cd front-end
@@ -61,37 +72,24 @@ npm install
 npm run build
 ```
 
-**静态资源放入后端**
+**将打包好的静态资源文件放入后端**
 
 ![image-20210706173224172](https://img.alicdn.com/imgextra/i2/O1CN01QLp1Qw1TCVrPddfjZ_!!6000000002346-2-tps-322-521.png)
 
+### 启动项目
 
-
-**修改app_key、app_secret、agent_id**
-
-![image-20210706173701248](https://img.alicdn.com/imgextra/i4/O1CN013T5AIB1XgWH2FAV9O_!!6000000002953-2-tps-848-380.png)
-
-
-
-**启动后端服务，使用钉钉访问首页**
-
-
+- 启动springboot
+- 移动端钉钉点击工作台，找到创建的应用，进入应用
 
 ### 页面展示
 
 **进入首页自动登陆**
 
-![image-20210706174029703](https://img.alicdn.com/imgextra/i3/O1CN01sQ4hTv1p7rNrR1TDC_!!6000000005314-2-tps-331-519.png)
+![image-20210706174029703](https://img.alicdn.com/imgextra/i4/O1CN017ExZDY1sF8Y5TOgJD_!!6000000005736-2-tps-446-165.png)
 
+**查看课表，申请换课**
 
-
-**点击“调换课”查看课表**
-
-![image-20210706174139748](https://img.alicdn.com/imgextra/i4/O1CN01TuurDn1VnGsdkQVih_!!6000000002697-2-tps-332-565.png)
-
-**勾选我的课程和其他老师课程，点击申请换课**
-
-![image-20210706174256165](https://img.alicdn.com/imgextra/i1/O1CN0135Qi2E1WaHG8lsYKm_!!6000000002804-2-tps-317-463.png)
+![image-20210706174139748](https://img.alicdn.com/imgextra/i4/O1CN01KtRIKK1Y5FgQobJiP_!!6000000003007-2-tps-447-728.png)
 
 **被申请老师收到消息**
 
@@ -101,19 +99,13 @@ npm run build
 
 ![image-20210706174519695](https://img.alicdn.com/imgextra/i2/O1CN01TYzfsj1XIhg90WTRx_!!6000000002901-2-tps-450-192.png)
 
-**重新查看课表**
-
-![image-20210706174636405](https://img.alicdn.com/imgextra/i1/O1CN01hZdXZs22fpll5QVGU_!!6000000007148-2-tps-336-586.png)
-
-**被申请人点“同意”后，上课时间已经调换，“拒绝”时则无变化**
 
 
+*ps：首页“发起待办/通知”含“家校通讯录”相关接口和功能，上述步骤未配置则不可用*
 
-**ps：首页“发起待办/通知”含“家校通讯录”相关接口和功能，上述步骤未配置则不可用， demo中功能为选择进入家校班级，选择老师发送待办或通知，详情可参考：https://github.com/open-dingtalk/h5app-homeschool-comm-demo**
+**Demo家校功能页面展示：**
 
-**demo中部分页面展示：**
-
-![image-20210706175116982](https://img.alicdn.com/imgextra/i3/O1CN01vFSNMe1g9OABUIwIU_!!6000000004099-2-tps-332-452.png)
+![image-20210706175116982](https://img.alicdn.com/imgextra/i2/O1CN01utUs6t1qWsf9wkJFI_!!6000000005504-2-tps-443-493.png)
 
 <center>发送通知</center>
 
@@ -125,7 +117,7 @@ npm run build
 
 
 
-![image-20210706175435321](https://img.alicdn.com/imgextra/i1/O1CN01mfh2gA1lTbj7Ixxzl_!!6000000004820-2-tps-330-562.png)
+![image-20210706175435321](https://img.alicdn.com/imgextra/i2/O1CN01I7dxZj1zZvq4wSDV9_!!6000000006729-2-tps-446-815.png)
 
 <center>发起待办</center>
 
