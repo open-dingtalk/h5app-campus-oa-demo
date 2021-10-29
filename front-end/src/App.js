@@ -64,14 +64,6 @@ class App extends React.Component {
         text: "",
         time: "",
       },
-      //   form: {
-      //     title: "任务待办",
-      //     url: "/toWork",
-      //     createTime: "2021-07-05 16:00:00",
-      //     formTitle: "标题",
-      //     formContent: "内容",
-      //   },
-      //   toWorkUrl: "",
       origin: "",
       displayType: 0,
     }
@@ -158,13 +150,6 @@ class App extends React.Component {
   }
 
   render() {
-    // if (this.state.toWorkUrl === "") {
-    //   let origin = window.location.origin
-    //   let toWorkUrl = origin + this.state.form.url
-    //   this.setState({
-    //     toWorkUrl: toWorkUrl,
-    //   })
-    // }
     if (this.state.userId === "") {
       this.login()
     }
@@ -249,10 +234,7 @@ class App extends React.Component {
             <Work
               showType={this.state.showType}
               users={this.state.sendMessage.teacherList}
-              //   form={this.state.form}
-              //   onChange={(e) => this.updateFormData(e)}
               onClick={(e) => this.newWorkRecord(e)}
-              //   toWorkUrl={this.state.toWorkUrl}
             />
           </div>
         )
@@ -281,7 +263,6 @@ class App extends React.Component {
       })
       .then((res) => {
         message.success("调课申请已发出，请留意通知消息!")
-        // alert("classUserList --- " + JSON.stringify(this.state.students))
       })
       .catch((error) => {
         alert("adjust err " + JSON.stringify(error))
@@ -352,31 +333,6 @@ class App extends React.Component {
         alert(JSON.stringify(error))
       })
   }
-  //   updateFormData(e) {
-  //     let form = this.state.form
-  //     switch (e.target.name) {
-  //       case "title":
-  //         form.title = e.target.value
-  //         this.setState({ form: form })
-  //         break
-  //       case "url":
-  //         let toWorkUrl = e.target.value
-  //         this.setState({ toWorkUrl: toWorkUrl })
-  //         break
-  //       case "createTime":
-  //         form.createTime = e.target.value
-  //         this.setState({ form: form })
-  //         break
-  //       case "formTitle":
-  //         form.formTitle = e.target.value
-  //         this.setState({ form: form })
-  //         break
-  //       case "formContent":
-  //         form.formContent = e.target.value
-  //         this.setState({ form: form })
-  //         break
-  //     }
-  //   }
   chooseDept(e, deptId, deptType, name) {
     console.log("chooseDept deptId : " + deptId)
     if (deptType === "class") {
